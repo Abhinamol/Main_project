@@ -1698,71 +1698,71 @@ def approve_leave(request, leave_application_id):
 
     #chatgpt nrs
     # chatapp/views.py
-from django.http import JsonResponse
-from django.views.decorators.csrf import csrf_exempt
-from django.shortcuts import render
-from transformers import GPT2LMHeadModel, GPT2Tokenizer
+# from django.http import JsonResponse
+# from django.views.decorators.csrf import csrf_exempt
+# from django.shortcuts import render
+# from transformers import GPT2LMHeadModel, GPT2Tokenizer
 
-model_name = "gpt2"
-tokenizer = GPT2Tokenizer.from_pretrained(model_name)
-model = GPT2LMHeadModel.from_pretrained(model_name)
+# model_name = "gpt2"
+# tokenizer = GPT2Tokenizer.from_pretrained(model_name)
+# model = GPT2LMHeadModel.from_pretrained(model_name)
 
 
 
-@never_cache
-@login_required(login_url='login')
-@csrf_exempt
-def chatgpt(request):
-    return render(request, 'chatgpt.html')
-
+# @never_cache
+# @login_required(login_url='login')
 # @csrf_exempt
+# def chatgpt(request):
+#     return render(request, 'chatgpt.html')
+
+# # @csrf_exempt
+# # def generate_response(request):
+# #     if request.method == 'POST':
+# #         user_input = request.POST.get('user_input')
+# #         response = generate_gpt2_response(user_input)
+# #         return JsonResponse({'response': response})
+# #     else:
+# #         return JsonResponse({'error': 'Invalid request method'})
+
 # def generate_response(request):
 #     if request.method == 'POST':
-#         user_input = request.POST.get('user_input')
-#         response = generate_gpt2_response(user_input)
-#         return JsonResponse({'response': response})
+
+#         user_input = request.POST.get('user_input').lower()
+#         if 'slow' in user_input:
+#             response_data = {'response': "Slow performance can be due to various reasons. You can try the following:\n\n- Close unused programs and browser tabs.\n- Delete temporary files and clear cache.\n- Disable startup programs.\n- Increase RAM or upgrade to an SSD."}
+#         elif 'internet connectivity' in user_input:
+#             response_data = {'response': "If you're experiencing internet connectivity issues:\n\n- Restart your router and modem.\n- Check if other devices can connect to the same network.\n- Update network drivers.\n- Reset TCP/IP stack or renew IP address."}
+#         elif 'overheating' in user_input:
+#             response_data = {'response': "If your laptop/computer is overheating:\n\n- Ensure proper ventilation and avoid blocking air vents.\n- Clean dust from fans and heat sinks.\n- Use a laptop cooling pad.\n- Avoid using the device on soft surfaces like beds or sofas."}
+#         elif 'frozen' in user_input:
+#             response_data = {'response': "If your laptop/computer is frozen:\n\n- Press Ctrl + Alt + Delete to open Task Manager.\n- End unresponsive tasks or processes.\n- Restart your device if necessary.\n- Check for updates and install them."}
+#         elif 'turn on' in user_input:
+#             response_data = {'response': "If your laptop/computer won't turn on:\n\n- Check power connections and try a different outlet.\n- Remove the battery (if removable) and reinsert it.\n- Press and hold the power button for 10-15 seconds.\n- Test with a different power adapter or charger."}
+#         elif 'error messages' in user_input:
+#             response_data = {'response': "If your laptop/computer is showing strange error messages:\n\n- Note down the error message and search online for solutions.\n- Update device drivers and system software.\n- Run a malware scan using antivirus software.\n- If the issue persists, consider seeking professional help."}
+#         # Add more questions and answers related to computer/laptop issues here
+#         elif 'battery life' in user_input:
+#             response_data = {'response': "To improve battery life:\n\n- Lower screen brightness.\n- Disable background processes and apps.\n- Use battery saver mode.\n- Avoid extreme temperatures."}
+#         elif 'storage space' in user_input:
+#             response_data = {'response': "If you're running out of storage space:\n\n- Delete unnecessary files and programs.\n- Move files to external storage or cloud storage.\n- Use disk cleanup tools.\n- Consider upgrading to a larger hard drive or SSD."}
+#         elif 'blue screen' in user_input:
+#             response_data = {'response': "If you're encountering blue screen errors:\n\n- Update device drivers.\n- Scan for malware.\n- Check for hardware issues such as faulty RAM or hard drive.\n- Restore system to a previous state using System Restore (Windows) or Time Machine (Mac)."}
+
+#         else:
+#             response_data = {'response': "Sorry, I couldn't understand. Please rephrase your question."}
+#             # response = generate_gpt2_response(user_input)
+#             # response_data = {'response': response}
+
+#         return JsonResponse(response_data)
 #     else:
 #         return JsonResponse({'error': 'Invalid request method'})
 
-def generate_response(request):
-    if request.method == 'POST':
 
-        user_input = request.POST.get('user_input').lower()
-        if 'slow' in user_input:
-            response_data = {'response': "Slow performance can be due to various reasons. You can try the following:\n\n- Close unused programs and browser tabs.\n- Delete temporary files and clear cache.\n- Disable startup programs.\n- Increase RAM or upgrade to an SSD."}
-        elif 'internet connectivity' in user_input:
-            response_data = {'response': "If you're experiencing internet connectivity issues:\n\n- Restart your router and modem.\n- Check if other devices can connect to the same network.\n- Update network drivers.\n- Reset TCP/IP stack or renew IP address."}
-        elif 'overheating' in user_input:
-            response_data = {'response': "If your laptop/computer is overheating:\n\n- Ensure proper ventilation and avoid blocking air vents.\n- Clean dust from fans and heat sinks.\n- Use a laptop cooling pad.\n- Avoid using the device on soft surfaces like beds or sofas."}
-        elif 'frozen' in user_input:
-            response_data = {'response': "If your laptop/computer is frozen:\n\n- Press Ctrl + Alt + Delete to open Task Manager.\n- End unresponsive tasks or processes.\n- Restart your device if necessary.\n- Check for updates and install them."}
-        elif 'turn on' in user_input:
-            response_data = {'response': "If your laptop/computer won't turn on:\n\n- Check power connections and try a different outlet.\n- Remove the battery (if removable) and reinsert it.\n- Press and hold the power button for 10-15 seconds.\n- Test with a different power adapter or charger."}
-        elif 'error messages' in user_input:
-            response_data = {'response': "If your laptop/computer is showing strange error messages:\n\n- Note down the error message and search online for solutions.\n- Update device drivers and system software.\n- Run a malware scan using antivirus software.\n- If the issue persists, consider seeking professional help."}
-        # Add more questions and answers related to computer/laptop issues here
-        elif 'battery life' in user_input:
-            response_data = {'response': "To improve battery life:\n\n- Lower screen brightness.\n- Disable background processes and apps.\n- Use battery saver mode.\n- Avoid extreme temperatures."}
-        elif 'storage space' in user_input:
-            response_data = {'response': "If you're running out of storage space:\n\n- Delete unnecessary files and programs.\n- Move files to external storage or cloud storage.\n- Use disk cleanup tools.\n- Consider upgrading to a larger hard drive or SSD."}
-        elif 'blue screen' in user_input:
-            response_data = {'response': "If you're encountering blue screen errors:\n\n- Update device drivers.\n- Scan for malware.\n- Check for hardware issues such as faulty RAM or hard drive.\n- Restore system to a previous state using System Restore (Windows) or Time Machine (Mac)."}
-
-        else:
-            response_data = {'response': "Sorry, I couldn't understand. Please rephrase your question."}
-            # response = generate_gpt2_response(user_input)
-            # response_data = {'response': response}
-
-        return JsonResponse(response_data)
-    else:
-        return JsonResponse({'error': 'Invalid request method'})
-
-
-def generate_gpt2_response(user_input, max_length=100):
-    input_ids = tokenizer.encode(user_input, return_tensors="pt")
-    output = model.generate(input_ids, max_length=max_length, num_beams=5, no_repeat_ngram_size=2, top_k=50, top_p=0.95)
-    response = tokenizer.decode(output[0], skip_special_tokens=True)
-    return response
+# def generate_gpt2_response(user_input, max_length=100):
+#     input_ids = tokenizer.encode(user_input, return_tensors="pt")
+#     output = model.generate(input_ids, max_length=max_length, num_beams=5, no_repeat_ngram_size=2, top_k=50, top_p=0.95)
+#     response = tokenizer.decode(output[0], skip_special_tokens=True)
+#     return response
 
 
 
