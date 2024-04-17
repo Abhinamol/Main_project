@@ -115,9 +115,9 @@ urlpatterns = [
     path('approve-leave/<int:leave_application_id>/', views.approve_leave, name='approve_leave'),
     # path('chatgpt/', views.chatgpt, name='chatgpt'),
     # path('generate-response/', views.generate_response, name='generate_response'),
-    path('seminar/', views.seminar, name='seminar'),
-    path('predict_price/', views.predict_price, name='predict_price'),
-    path('prediction_result/', views.prediction_result, name='prediction_result'),
+    # path('seminar/', views.seminar, name='seminar'),
+    # path('predict_price/', views.predict_price, name='predict_price'),
+    # path('prediction_result/', views.prediction_result, name='prediction_result'),
     
 
 

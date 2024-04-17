@@ -1766,89 +1766,89 @@ def approve_leave(request, leave_application_id):
 
 
 
-from django.shortcuts import render
-from django.http import JsonResponse
-from django.views.decorators.csrf import csrf_exempt
-import pandas as pd
-from sklearn.model_selection import train_test_split
-from sklearn.preprocessing import LabelEncoder
-from sklearn.ensemble import RandomForestRegressor
-from sklearn.metrics import mean_squared_error
+# from django.shortcuts import render
+# from django.http import JsonResponse
+# from django.views.decorators.csrf import csrf_exempt
+# import pandas as pd
+# from sklearn.model_selection import train_test_split
+# from sklearn.preprocessing import LabelEncoder
+# from sklearn.ensemble import RandomForestRegressor
+# from sklearn.metrics import mean_squared_error
 
-# Load the dataset
-data = pd.read_csv("templates/laptops.csv", encoding='latin1')
-data.dropna(inplace=True)
+# # Load the dataset
+# data = pd.read_csv("templates/laptops.csv", encoding='latin1')
+# data.dropna(inplace=True)
 
-# Preprocess: Replace commas with periods in the 'Price (Euros)' column
-data['Price (Euros)'] = data['Price (Euros)'].str.replace(',', '.').astype(float)
+# # Preprocess: Replace commas with periods in the 'Price (Euros)' column
+# data['Price (Euros)'] = data['Price (Euros)'].str.replace(',', '.').astype(float)
 
-# Encode categorical variables
-label_encoder_manufacturer = LabelEncoder()
-label_encoder_model = LabelEncoder()
-data['Manufacturer'] = label_encoder_manufacturer.fit_transform(data['Manufacturer'])
-data['Model Name'] = label_encoder_model.fit_transform(data['Model Name'])
+# # Encode categorical variables
+# label_encoder_manufacturer = LabelEncoder()
+# label_encoder_model = LabelEncoder()
+# data['Manufacturer'] = label_encoder_manufacturer.fit_transform(data['Manufacturer'])
+# data['Model Name'] = label_encoder_model.fit_transform(data['Model Name'])
 
-# Feature selection
-X = data[['Manufacturer', 'Model Name']]
-y = data['Price (Euros)']
+# # Feature selection
+# X = data[['Manufacturer', 'Model Name']]
+# y = data['Price (Euros)']
 
-# Split the dataset into training and testing sets
-X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+# # Split the dataset into training and testing sets
+# X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
 
-# Train the Random Forest model
-rf_model = RandomForestRegressor(n_estimators=100, random_state=42)
-rf_model.fit(X_train, y_train)
-
-
-
-@never_cache
-@login_required(login_url='login')
-@csrf_exempt
-def predict_price(request):
-    if request.method == 'POST':
-        try:
-            manufacturer = request.POST.get('manufacturer')
-            model_name = request.POST.get('model_name')
-            # Encode manufacturer and model name
-            manufacturer_encoded = label_encoder_manufacturer.transform([manufacturer])[0]
-            model_name_encoded = label_encoder_model.transform([model_name])[0]
-            # Predict the price using the trained Random Forest model
-            predicted_price = rf_model.predict([[manufacturer_encoded, model_name_encoded]])[0]
-            # Find details of the laptop
-            details = data[(data['Manufacturer'] == manufacturer_encoded) & (data['Model Name'] == model_name_encoded)].iloc[0]
-            # Prepare the response
-            response_data = {
-                'predicted_price': predicted_price,
-                'details': {
-                    'Manufacturer': manufacturer,
-                    'Model Name': model_name,
-                    'Details': details.to_dict()
-                }
-            }
-            # Pass the response data to the prediction_result.html template
-            return render(request, 'prediction_result.html', response_data)
-        except ValueError as e:
-            error_message = "An error occurred while processing the request: " + str(e)
-            return render(request, 'seminar.html', {'error_message': error_message})  # Render seminar.html with error message
-        except IndexError as e:
-            error_message = "An error occurred while processing the request: " + str(e)
-            return render(request, 'seminar.html', {'error_message': error_message})  # Render seminar.html with error message
-    else:
-        return render(request, 'seminar.html')
+# # Train the Random Forest model
+# rf_model = RandomForestRegressor(n_estimators=100, random_state=42)
+# rf_model.fit(X_train, y_train)
 
 
 
-@never_cache
-@login_required(login_url='login')
-def seminar(request):
-    error_message = '{"error": "An error occurred while processing the request: single positional indexer is out-of-bounds"}'
-    return render(request, 'seminar.html', {'error_message': error_message})
+# @never_cache
+# @login_required(login_url='login')
+# @csrf_exempt
+# def predict_price(request):
+#     if request.method == 'POST':
+#         try:
+#             manufacturer = request.POST.get('manufacturer')
+#             model_name = request.POST.get('model_name')
+#             # Encode manufacturer and model name
+#             manufacturer_encoded = label_encoder_manufacturer.transform([manufacturer])[0]
+#             model_name_encoded = label_encoder_model.transform([model_name])[0]
+#             # Predict the price using the trained Random Forest model
+#             predicted_price = rf_model.predict([[manufacturer_encoded, model_name_encoded]])[0]
+#             # Find details of the laptop
+#             details = data[(data['Manufacturer'] == manufacturer_encoded) & (data['Model Name'] == model_name_encoded)].iloc[0]
+#             # Prepare the response
+#             response_data = {
+#                 'predicted_price': predicted_price,
+#                 'details': {
+#                     'Manufacturer': manufacturer,
+#                     'Model Name': model_name,
+#                     'Details': details.to_dict()
+#                 }
+#             }
+#             # Pass the response data to the prediction_result.html template
+#             return render(request, 'prediction_result.html', response_data)
+#         except ValueError as e:
+#             error_message = "An error occurred while processing the request: " + str(e)
+#             return render(request, 'seminar.html', {'error_message': error_message})  # Render seminar.html with error message
+#         except IndexError as e:
+#             error_message = "An error occurred while processing the request: " + str(e)
+#             return render(request, 'seminar.html', {'error_message': error_message})  # Render seminar.html with error message
+#     else:
+#         return render(request, 'seminar.html')
 
 
 
-@never_cache
-@login_required(login_url='login')
-def prediction_result(request):
-    # You can pass any necessary context data here if needed
-    return render(request, 'prediction_result.html')
+# @never_cache
+# @login_required(login_url='login')
+# def seminar(request):
+#     error_message = '{"error": "An error occurred while processing the request: single positional indexer is out-of-bounds"}'
+#     return render(request, 'seminar.html', {'error_message': error_message})
+
+
+
+# @never_cache
+# @login_required(login_url='login')
+# def prediction_result(request):
+#     # You can pass any necessary context data here if needed
+#     return render(request, 'prediction_result.html')
 
